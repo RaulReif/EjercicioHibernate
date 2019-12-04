@@ -32,6 +32,8 @@ public class Ciclista {
         this.equipo = equipo;
     }
 
+    public Ciclista() {}
+
     public String getDorsal() {
         return dorsal;
     }

@@ -21,12 +21,13 @@ public class Equipo {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipo")
     private List<Ciclista> ciclistas = new ArrayList<>();
 
-    public Equipo(int id, String nombre, String patrocinador, List<Ciclista> ciclistas) {
+    public Equipo(int id, String nombre, String patrocinador) {
         this.id = id;
         this.nombre = nombre;
         this.patrocinador = patrocinador;
-        this.ciclistas = ciclistas;
     }
+
+    public Equipo() {}
 
     public int getId() {
         return id;

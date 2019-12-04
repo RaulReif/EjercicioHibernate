@@ -8,7 +8,7 @@ public class Palmares {
 
     @Id
     @Column
-    private int id;
+    private String id;
 
     @Column
     private int numero_vueltas;
@@ -20,14 +20,15 @@ public class Palmares {
     @PrimaryKeyJoinColumn
     private Ciclista ciclista;
 
-    public Palmares(int id, int numero_vueltas, int numero_maillots, Ciclista ciclista) {
+    public Palmares(String id, int numero_vueltas, int numero_maillots) {
         this.id = id;
         this.numero_vueltas = numero_vueltas;
         this.numero_maillots = numero_maillots;
-        this.ciclista = ciclista;
     }
 
-    public int getId(){
+    public Palmares() {}
+
+    public String getId(){
         return  this.id;
     }
 
@@ -47,7 +48,7 @@ public class Palmares {
         this.numero_maillots = numero_maillots;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
