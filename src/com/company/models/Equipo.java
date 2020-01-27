@@ -29,6 +29,8 @@ public class Equipo {
 
     public Equipo() {}
 
+    public Equipo(int id){ this.id = id; }
+
     public int getId() {
         return id;
     }

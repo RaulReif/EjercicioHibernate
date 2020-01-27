@@ -32,7 +32,16 @@ public class Ciclista {
         this.equipo = equipo;
     }
 
+    public Ciclista(String dorsal, String nombre, String apellidos) {
+        this.dorsal = dorsal;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+    }
+
     public Ciclista() {}
+
+
+    public Ciclista(String dorsal) { this.dorsal = dorsal; }
 
     public String getDorsal() {
         return dorsal;

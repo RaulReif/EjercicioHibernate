@@ -35,12 +35,12 @@ public class Main {
                         "5 - Consultar todos los ciclistas de un equipo con su palmare\n" +
                         "6 - Consultar un ciclista\n" +
                         "7 - Consultar un ciclista con su palmare\n" +
-                        "7 - Actualizar un equipo\n" +
-                        "8 - Actualizar un ciclista\n" +
-                        "9 - Actualizar el palmare de un ciclista\n" +
-                        "10 - Eliminar un ciclista\n" +
-                        "11 - Eliminar un equipo\n" +
-                        "12 - Salir\n" +
+                        "8 - Actualizar un equipo\n" +
+                        "9 - Actualizar un ciclista\n" +
+                        "10 - Actualizar el palmare de un ciclista\n" +
+                        "11 - Eliminar un ciclista\n" +
+                        "12 - Eliminar un equipo\n" +
+                        "13 - Salir\n" +
                         "*********************************************");
 
 
@@ -65,26 +65,67 @@ public class Main {
                     case 4:
                         System.out.print("Dime el id del equipo: ");
                         int id4 = Integer.parseInt(br.readLine());
-                        List<Equipo> listaEquipos4 = session.createQuery("SELECT e FROM equipo e WHERE id = " + id4, Equipo.class).getResultList();
-                        List<Ciclista> listaCiclistas4 = listaEquipos4.get(0).getCiclistas();
+                        Equipo e4 = session.get(Equipo.class, id4);
+                        List<Ciclista> listaCiclistas4 = e4.getCiclistas();
                         mostrarCiclistas(listaCiclistas4);
                         break;
                     case 5:
-                        mostrarEquipos(session.createQuery("SELECT e FROM Equipo e", Equipo.class).getResultList());
+                        System.out.print("Dime el id del equipo: ");
+                        int id5 = Integer.parseInt(br.readLine());
+                        Equipo e5 = session.get(Equipo.class, id5);
+                        List<Ciclista> listaCiclistas5 = e5.getCiclistas();
+                        mostrarCiclistasConPalmares(listaCiclistas5);
                         break;
                     case 6:
+                        System.out.print("Dime el dorsal del ciclista:");
+                        mostrarCiclista(session.get(Ciclista.class, br.readLine()));
                         break;
                     case 7:
+                        System.out.print("Dime el dorsal del ciclista:");
+                        mostrarCiclistaConPalmare(session.get(Ciclista.class, br.readLine()));
                         break;
                     case 8:
+                        System.out.print("Dime el id del equipo a actualizar:");
+                        session.beginTransaction();
+                        session.update(actualizarEquipo(Integer.parseInt(br.readLine())));
+                        session.getTransaction().commit();
                         break;
                     case 9:
+                        System.out.print("Dime el dorsal del ciclista a actualizar: ");
+                        String dorsal8 = br.readLine();
+                        System.out.print("Nombre: ");
+                        String nombre8 = br.readLine();
+                        System.out.print("Apellidos: ");
+                        String apellidos8 = br.readLine();
+                        Ciclista c8 = session.get(Ciclista.class, dorsal8);
+                        c8.setNombre(nombre8);
+                        c8.setApellidos(apellidos8);
+                        session.beginTransaction();
+                        session.update(c8);
+                        session.getTransaction().commit();
                         break;
                     case 10:
+                        System.out.println("Dime el dorsal del ciclista");
+                        String id10 = br.readLine();
+                        System.out.print("Número de vueltas:");
+                        int numero_vueltas = Integer.parseInt(br.readLine());
+                        System.out.print("Número de maillots:");
+                        int numero_maillots = Integer.parseInt(br.readLine());
+                        session.beginTransaction();
+                        session.update(new Palmares(id10, numero_vueltas, numero_maillots));
+                        session.getTransaction().commit();
                         break;
                     case 11:
+                        System.out.println("Dime el dorsal del ciclista a eliminar");
+                        session.beginTransaction();
+                        session.delete(new Ciclista(br.readLine()));
+                        session.getTransaction().commit();
                         break;
                     case 12:
+                        System.out.println("Dime el id del equipo a eliminar");
+                        session.beginTransaction();
+                        session.delete(new Equipo(Integer.parseInt(br.readLine())));
+                        session.getTransaction().commit();
                         break;
                     default:
                         System.out.println("No has escogido una opción valida");
@@ -96,7 +137,7 @@ public class Main {
                 e.printStackTrace();
                 System.out.println("Introduce un número valido correspondiente con una de las opciones del menu");
             }
-        } while (opcion != 5);
+        } while (opcion != 13);
 
     }
 
@@ -120,12 +161,31 @@ public class Main {
         }
     }
 
-    private static void mostrarCiclistas(List<Ciclista> lista){
+    private static void mostrarCiclista(Ciclista c) {
+        System.out.println("\nDorsal: " + c.getDorsal());
+        System.out.println("Nombre: " + c.getNombre());
+        System.out.println("Apellidos: " + c.getApellidos() + "\n");
+    }
+
+    private static void mostrarCiclistas(List<Ciclista> lista) {
         for (int i = 0; i < lista.size(); i++) {
-            Ciclista c = lista.get(i);
-            System.out.println("Dorsal: " + c.getDorsal());
-            System.out.println("Nombre: " + c.getNombre());
-            System.out.println("Apellidos: " + c.getApellidos() + "\n");
+            mostrarCiclista(lista.get(i));
+        }
+    }
+
+    private static void mostrarCiclistaConPalmare(Ciclista c) {
+        System.out.println("\n-Dorsal: " + c.getDorsal());
+        System.out.println("-Nombre: " + c.getNombre());
+        System.out.println("-Apellidos: " + c.getApellidos());
+        Palmares palmares = c.getPalmares();
+        System.out.println("Datos de palmares ->\n" +
+                "-Número de vueltas: " + palmares.getNumero_vueltas() + "\n" +
+                "-Número de maillots: " + palmares.getNumero_maillots());
+    }
+
+    private static void mostrarCiclistasConPalmares(List<Ciclista> lista) {
+        for (int i = 0; i < lista.size(); i++) {
+            mostrarCiclistaConPalmare(lista.get(i));
         }
     }
 
@@ -160,13 +220,27 @@ public class Main {
         }
     }
 
-    private static void mostrarEquipo(Equipo e){
-        System.out.println("-Nombre: " + e.getNombre());
+    @Nullable
+    private static Equipo actualizarEquipo(int id) {
+        try {
+            System.out.print("Nombre: ");
+            String nombre = br.readLine();
+            System.out.print("Patrocinador: ");
+            String patrocinador = br.readLine();
+            return new Equipo(id, nombre, patrocinador);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static void mostrarEquipo(Equipo e) {
+        System.out.println("\n-Nombre: " + e.getNombre());
         System.out.println("-Patrocinador: " + e.getPatrocinador());
         System.out.println("-Número de ciclistas: " + e.getCiclistas().size() + "\n");
     }
 
-    private static void mostrarEquipos(List<Equipo> lista){
+    private static void mostrarEquipos(List<Equipo> lista) {
         for (int i = 0; i < lista.size(); i++) {
             mostrarEquipo(lista.get(i));
         }
